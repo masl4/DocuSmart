@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}  
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<div class="container d-flex flex-column align-items-center justify-content-center text-center mt-5">
+    <div class="video-container mb-4">
+        <video src="{% static 'videos/video_demo.mp4' %}" autoplay loop muted playsinline class="shadow-lg"></video>
+    </div>
+
+    <h1 class="mb-3 display-4 text-gradient">🌍 Bienvenido a DocuSmart</h1>
+    <p class="fw-light text-muted fs-5">Optimiza, analiza y traduce documentos con inteligencia avanzada.</p>
+
+    {% if user.is_authenticated %}
+        <div class="mt-4 d-flex flex-column flex-md-row gap-3">
+            <a href="{% url 'subir_documento' %}" class="btn btn-danger btn-lg shadow-sm rounded-pill">📤 Subir Documento</a>
+            <a href="{% url 'lista_documentos' %}" class="btn btn-dark btn-lg shadow-sm rounded-pill">📂 Ver Mis Documentos</a>
+        </div>
+    {% else %}
+        <div class="mt-4 d-flex flex-column flex-md-row gap-3">
+            <a href="{% url 'login' %}" class="btn btn-success btn-lg shadow-sm rounded-pill">🔑 Iniciar Sesión</a>
+            <a href="{% url 'registro' %}" class="btn btn-outline-primary btn-lg shadow-sm rounded-pill">📝 Registrarse</a>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .video-container {
+        width: 90%;
+        max-width: 600px;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        transition: transform 0.3s ease;
+    }
+
+    .video-container:hover {
+        transform: scale(1.02);
+    }
+
+    .video-container video {
+        width: 100%;
+        display: block;
+    }
+
+    .text-gradient {
+        background: linear-gradient(90deg, #ff7e5f, #feb47b);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        font-weight: 700;
+    }
+
+    .btn {
+        padding: 12px 40px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    }
+
+    @media (max-width: 992px) {
+        .btn {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+</style>
+{% endblock %}

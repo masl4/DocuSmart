@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Traducción del Documento{% endblock %}
+
+{% block content %}
+<div class="card shadow p-4">
+    <h2 class="text-center">📝 Traducción del Documento</h2>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <h5>📜 Texto Original</h5>
+            <textarea id="texto-original" class="form-control bg-light" rows="15" readonly>{{ texto_original }}</textarea>
+            <p><strong>RECUENTO:</strong> {{ texto_original|length }} caracteres</p>
+        </div>
+        
+        <div class="col-md-6">
+            <h5>🌍 Texto Traducido</h5>
+            <textarea class="form-control bg-light" rows="15" readonly>{{ texto_traducido }}</textarea>
+            <div class="mt-4">
+            <h5> Idioma seleccionado: <span class="text-primary">{{ idioma_seleccionado_user }}</span></h5>
+        </div>
+            <p><strong>RECUENTO:</strong> {{ texto_traducido|length }} caracteres</p>
+         </div>
+        <div class="mt-4">
+            <h5>📊 Análisis del Texto Traducido</h5>
+            <ul class="list-group">
+                <li class="list-group-item">📌 Total de Palabras: <strong>{{ total_palabras_traducidas }}</strong></li>
+                <li class="list-group-item">📌 Total de Oraciones: <strong>{{ total_oraciones_traducidas }}</strong></li>
+            </ul>
+        </div>
+        </div>
+          
+         <div class="mt-4">
+        <div class="mt-4">
+        <h5> </h5>
+        
+    </div>
+   <div class="accordion mt-3" id="accordionEnlaces">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingEnlaces">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEnlaces" aria-expanded="false" aria-controls="collapseEnlaces">
+                        🔑 Mostrar Palabras Clave de la Traducción
+                    </button>
+                </h2>
+                <div id="collapseEnlaces" class="accordion-collapse collapse" aria-labelledby="headingEnlaces" data-bs-parent="#accordionEnlaces">
+                    <div class="accordion-body">
+                        <ul class="list-group">          
+                            {% for palabra in palabras_clave %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ palabra.texto }}
+                            <span class="badge bg-primary">Importancia: {{ palabra.relevancia }}</span>
+                                 </li>
+                            {% endfor %}
+        
+                        </ul>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'lista_documentos' %}" class="btn btn-secondary">🔙 Volver a Mis Documentos</a>
+
+        <form method="get" action="{% url 'descargar_traduccion_pdf' %}">
+            <input type="hidden" name="texto" value="{{ texto_traducido }}">
+            <button type="submit" class="btn btn-success mt-3">📄 Descargar PDF</button>
+        </form>
+
+    </div>
+</div>
+
+<script>
+    document.getElementById("descargar-traduccion").addEventListener("click", function() {
+        let texto = document.querySelector(".col-md-6 textarea").value;
+        let blob = new Blob([texto], { type: "text/plain" });
+        let link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "traduccion.txt";
+        link.click();
+    });
+</script>
+{% endblock %}

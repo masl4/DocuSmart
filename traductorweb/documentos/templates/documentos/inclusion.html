@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Texto Simplificado{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">🧩 Texto con Apoyo para Dislexia</h2>
+
+    <div class="mt-4">
+        <h5>📜 Texto Original</h5>
+        <textarea id="texto-original" class="form-control bg-light" rows="10">{{ texto_original }}</textarea>
+    </div>
+
+    <div class="mt-4">
+        <h4>📝 Texto Adaptado</h4>
+        <div id="texto-adaptado" style="
+            font-family: 'OpenDyslexic', Arial, sans-serif;
+            font-size: 1.2em;
+            line-height: 1.8;
+            color: #222;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            word-spacing: 0.2em;
+        ">
+            {{ texto_dislexia|safe }}
+        </div>
+    </div>
+
+<div class="text-center mt-4">
+    <button onclick="leerTextoOriginal()" class="btn btn-primary btn-lg" style="font-size: 1.5rem;">
+        🔊 Escuchar el Texto Original
+    </button>
+</div>
+
+<script>
+    function leerTextoOriginal() {
+        const texto = document.getElementById('texto-original').value;
+        const utterance = new SpeechSynthesisUtterance(texto);
+        utterance.lang = 'es-ES';
+        speechSynthesis.cancel();  
+        speechSynthesis.speak(utterance);
+    }
+</script>
+
+
+<div class="text-center mt-2">
+    <button onclick="detenerLectura()" class="btn btn-danger btn-lg" style="font-size: 1.5rem;">
+        ⛔ Detener Lectura
+    </button>
+</div>
+
+ <script>
+    function detenerLectura() {
+        speechSynthesis.cancel();
+    }
+</script>
+
+
+    <div class="text-center mt-4">
+        <a href="{% url 'inspeccionar_documento' documento.id %}" class="btn btn-secondary" style="font-size: 1.5rem;">🔙 Volver al Analizador</a>
+    </div>
+</div>
+
+
+{% endblock %}

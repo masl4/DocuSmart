@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block title %}Traducción{% endblock %}
+
+{% block content %}
+<div class="card shadow p-4">
+    <h2 class="text-center">📝 Análisis del Documento</h2>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <h5>📜 Texto Original</h5>
+            <textarea id="texto-original" class="form-control bg-light" rows="10">{{ texto_original }}</textarea>
+            <p><strong>RECUENTO:</strong> {{ texto_original|length }} caracteres</p>
+        </div>
+            <a href="{% url 'simplificar_texto' documento.id %}" class="btn btn-success btn-sm shadow-sm rounded-pill me-2">🔍 Inclusion</a>
+
+     <div class="mt-4">
+        <h5>📊 Análisis del Texto Original</h5>
+        <ul class="list-group">
+            <li class="badge bg-warning text-dark rounded-pill px-3 py-2 mb-2">📌 Total de Palabras: <strong>{{ total_palabras }}</strong></li>
+            <li class="badge bg-warning text-dark rounded-pill px-3 py-2">📌 Total de Oraciones: <strong>{{ total_oraciones }}</strong></li>
+        </ul>
+    </div>
+
+    <div class="accordion mt-4" id="accordionPreguntas">
+  <div class="accordion-item rounded-xl shadow">
+    <h2 class="accordion-header" id="headingPreguntas">
+      <button class="accordion-button collapsed text-lg font-semibold text-blue-700" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePreguntas" aria-expanded="false" aria-controls="collapsePreguntas">
+        🧠 Preguntas Generadas (Desarrollo)
+      </button>
+    </h2>
+    <div id="collapsePreguntas" class="accordion-collapse collapse" aria-labelledby="headingPreguntas" data-bs-parent="#accordionPreguntas">
+      <div class="accordion-body">
+        {% if preguntas_vyf %}
+          <ul class="list-group">
+            {% for pregunta in preguntas_vyf %}
+              <li class="list-group-item">
+                <p><strong>❓ Pregunta:</strong> {{ pregunta.pregunta }}</p>
+                <p><strong>📚 Tipo:</strong> {{ pregunta.tipo }}</p>
+                <p><strong>✅ Tipo de Respuesta: Abierta</strong> {{ pregunta.respuesta }}</p>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-muted">🔎 No se han generado preguntas. Asegúrate de que el documento tiene suficiente texto.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+        <div class="mt-4">
+            <h5>🌎 Idioma Detectado: <span class="text-primary">{{ idioma_detectado }}</span></h5>
+        </div>
+    
+        <div class="mt-4">
+            <h5>🧠 Sentimiento del Documento: 
+                <span class="badge {% if sentimiento == 'positive' %}bg-success{% elif sentimiento == 'negative' %}bg-danger{% else %}bg-warning{% endif %}">
+                    {{ sentimiento }}
+                </span>
+            </h5>
+        </div>
+        
+        <div class="mt-4">
+            <h5>📊 Comprensión lectora del Texto Original</h5>
+            <ul class="list-group">
+                <li class="list-group-item"> La puntuación de lectura (Flesch Reading Ease) mide la dificultad del texto y ayuda a identificar el nivel educativo recomendado para comprenderlo con facilidad.
+                    Cuanto más alta es la puntuación (máximo 100), más fácil es de leer. El sistema traduce esta puntuación a niveles del sistema educativo español, desde Primaria hasta Universidad.
+                    Esto permite a los docentes saber si el contenido es adecuado para sus estudiantes en función de su etapa académica</li>
+                <li class="list-group-item">📈 Puntuación de Lectura: <strong>{{ total_puntuacion_lectora.reading_score }}</strong></li>
+                <li class="list-group-item">🧑‍🎓 Nivel educativo Correspondiente: <strong>{{ total_puntuacion_lectora.nivel_educativo }}</strong></li>
+        </div>
+        <div class="mt-4">
+                <h5>🔗 Nivel de cohesión del Texto Original</h5>
+                <li class="list-group-item">El nivel de cohesión de un texto se refiere a qué tan bien están conectadas sus ideas y partes,
+                     asegurando que el mensaje fluya de forma clara y coherente. Un texto con alto nivel de cohesión utiliza adecuadamente pronombres,
+                        conectores, sinónimos y referencias para evitar repeticiones y mantener una estructura lógica, mientras que un texto con bajo
+                         nivel de cohesión puede parecer fragmentado, confuso o difícil de seguir. </li>
+                <li class="list-group-item">🧩 Nivel de cohesión: <strong>{{ cohesion }}</strong></li>
+            </ul>
+        </div>
+        <div class="mt-4">
+            <h5>📊 Correcciones posibles</h5>
+            {% if correcciones_detectadas %}
+                <ul class="list-group" id="lista-correcciones">
+                    {% for s in correcciones_detectadas %}
+                        <li class="list-group-item" id="correccion-{{ forloop.counter }}">
+                            <p><strong>❌ Error:</strong> <span class="text-danger">{{ s.texto_incorrecto }}</span></p>
+                            <p><strong>📢 Sugerencia:</strong> {{ s.mensaje }}</p>
+                            <p><strong>✅ Reemplazos:</strong> 
+                                {% if s.reemplazos %}
+                                    <span class="text-success">{{ s.reemplazos|join:", " }}</span>
+                                {% else %}
+                                    <em>(Sin sugerencias)</em>
+                                {% endif %}
+                            </p>
+                            {% if s.reemplazos %}
+                                <button class="btn btn-sm btn-outline-primary" onclick="aplicarCorreccion('{{ s.texto_incorrecto }}', '{{ s.reemplazos.0 }}', 'correccion-{{ forloop.counter }}')">Aplicar "{{ s.reemplazos.0 }}"</button>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">✅ No se han detectado errores ortográficos o gramaticales.</p>
+            {% endif %}
+        </div>
+
+    
+<div class="container mt-4">
+
+    <!-- Nube de Palabras -->
+    <div class="card mb-4 shadow-lg rounded-2xl overflow-hidden">
+    <div class="card-body text-center bg-gradient-to-r from-blue-50 to-white p-6">
+        <h4 class="text-2xl font-bold text-blue-800 mb-4 flex items-center justify-center gap-2">
+            ☁️ Nube de Palabras
+        </h4>
+        <ul class="list-group list-group-flush text-gray-700 mb-4 px-4 py-2 bg-white rounded-xl shadow-md">
+            <li class="list-group-item bg-transparent border-0 text-md">
+                La nube de palabras (word cloud) es una forma visual de representar las palabras más frecuentes en un texto. 
+                Es especialmente útil para análisis de texto porque resalta los términos más importantes o repetidos, 
+                permitiendo a los usuarios identificar rápidamente los temas principales y patrones en los datos.
+            </li>
+        </ul>
+        <img src="data:image/png;base64,{{ nube_palabras }}" 
+             alt="Nube de Palabras" 
+             class="img-fluid shadow-lg rounded-xl border border-gray-300">
+    </div>
+
+</div>
+    
+<div class="mt-4">
+    <h5>🧐 Documentos Relacionados</h5>
+
+    <p class="list-group-item">
+        Estos enlaces pueden servir como base para apoyar y enriquecer las clases,
+        ofreciendo ejemplos, estudios y recursos adicionales para profundizar en los temas enseñados.
+    </p>
+
+    {% if enlaces_clave_google %}
+        <div class="accordion mt-3" id="accordionEnlaces">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingEnlaces">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEnlaces" aria-expanded="false" aria-controls="collapseEnlaces">
+                        📚 Mostrar enlaces bibliográficos
+                    </button>
+                </h2>
+                <div id="collapseEnlaces" class="accordion-collapse collapse" aria-labelledby="headingEnlaces" data-bs-parent="#accordionEnlaces">
+                    <div class="accordion-body">
+                        <ul class="list-group">
+                            {% for contenido in enlaces_clave_google %}
+                                <li class="list-group-item">
+                                    <p><strong>🔑 Palabra Clave Encontrada (relevancia {{ contenido.relevancia }}):</strong> {{ contenido.texto }}</p>
+                                    <p><strong>🔗 Buscar en Google:</strong> {{ contenido.link|safe }}</p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p class="text-muted">🔎 No se han encontrado documentos relacionados, prueba con otro texto.</p>
+    {% endif %}
+</div>
+
+<div class="text-center mt-4">
+    <a href="{% url 'lista_documentos' %}" class="btn btn-secondary">🔙 Volver a Mis Documentos</a>
+</div>
+
+
+<script>
+    document.getElementById("descargar-traduccion").addEventListener("click", function() {
+        let texto = document.querySelector(".col-md-6 textarea:nth-child(2)").value;
+        let blob = new Blob([texto], { type: "text/plain" });
+        let link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "traduccion.txt";
+        link.click();
+    });
+</script>
+<script>
+    function aplicarCorreccion(error, sugerencia, elementoId) {
+        const textoOriginal = document.getElementById("texto-original");
+        if (!textoOriginal) {
+            alert("No se encontró el campo de texto para aplicar la corrección.");
+            return;
+        }
+    
+        // Reemplaza la primera ocurrencia del error por la sugerencia
+        const nuevoTexto = textoOriginal.value.replace(error, sugerencia);
+        textoOriginal.value = nuevoTexto;
+    
+        // Eliminar el elemento de la lista
+        const li = document.getElementById(elementoId);
+        if (li) li.remove();
+    }
+    </script>
+{% endblock %}

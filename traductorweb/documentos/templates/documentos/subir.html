@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Subir Documento{% endblock %}
+
+{% block content %}
+<div class="card shadow-lg p-4 mx-auto bg-dark text-light" style="max-width: 800px; border-radius: 20px;">
+    <h2 class="text-center mb-4">📤 Subir un Documento</h2>
+    
+    <form method="post" enctype="multipart/form-data" class="mt-4">
+        {% csrf_token %}
+
+        <div id="drop-zone" class="text-center p-5 border border-dashed rounded bg-secondary text-light" style="border-radius: 15px; transition: all 0.3s ease;">
+            <p id="drop-text" style="font-size: 1.2rem;">🖱 Arrastra y suelta un archivo aquí o haz clic para seleccionar</p>
+            <input type="file" name="archivo" class="form-control d-none" id="file-input">
+        </div>
+        
+        <button type="submit" class="btn btn-primary w-100 mt-4 shadow-sm rounded-pill">🚀 Subir Documento</button>
+    </form>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'inicio' %}" class="btn btn-secondary">🔙 Volver al inicio</a>
+    </div>
+</div>
+
+
+<script>
+    const dropZone = document.getElementById("drop-zone");
+    const fileInput = document.getElementById("file-input");
+    const dropText = document.getElementById("drop-text");
+
+    dropZone.addEventListener("click", () => fileInput.click());
+
+    dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropZone.style.background = "#333";
+        dropZone.style.color = "#ffffff";
+        dropZone.style.borderColor = "#666";
+    });
+
+    dropZone.addEventListener("dragleave", () => {
+        dropZone.style.background = "#555";
+        dropZone.style.color = "#ddd";
+        dropZone.style.borderColor = "#888";
+    });
+
+    dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        fileInput.files = e.dataTransfer.files;
+        updateFileName(fileInput.files[0]);
+    });
+
+    fileInput.addEventListener("change", () => {
+        if (fileInput.files.length > 0) {
+            updateFileName(fileInput.files[0]);
+        }
+    });
+
+    function updateFileName(file) {
+        if (file) {
+            dropText.innerHTML = `📂 Archivo seleccionado: <strong>${file.name}</strong>`;
+            dropZone.style.background = "#444";
+            dropZone.style.color = "#ffffff";
+            dropZone.style.borderColor = "#777";
+        }
+    }
+</script>
+
+<style>
+    #drop-zone {
+        background-color: #444;
+        color: #ddd;
+        border-color: #777;
+        transition: all 0.3s ease;
+    }
+
+    #drop-zone:hover {
+        background-color: #555;
+        border-color: #888;
+        color: #fff;
+    }
+</style>
+
+{% endblock %}

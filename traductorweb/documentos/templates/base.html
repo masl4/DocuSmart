@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DocuSmart{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <style>
+        body {
+            background-color: #001f3f;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            background-color: #001f3f;
+            padding: 15px;
+            border-bottom: 3px solid #ff6f61;
+        }
+
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #0099ff !important;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand:hover {
+            color: #ff6f61 !important;
+        }
+
+        .profile-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-icon {
+            width: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-left: 15px;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #111;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1000;
+            margin-top: 15px;
+            width: 220px;
+            border: 2px solid #ff6f61;
+            opacity: 0;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            transform: translateY(-10px);
+            pointer-events: none;
+        }
+
+        .dropdown-item {
+            color: #ffffff;
+            padding: 10px 15px;
+            text-decoration: none;
+            display: block;
+            font-weight: 500;
+        }
+
+        .dropdown-item:hover {
+            background-color: #333;
+            border-radius: 5px;
+        }
+
+        .profile-container:hover .dropdown-menu {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .text-danger {
+            color: #ff6f61 !important;
+        }
+
+        .dropdown-item .icon {
+            margin-right: 10px;
+            color: #ff6f61;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-brand {
+                margin-bottom: 20px;
+            }
+            .dropdown-menu {
+                width: 100%;
+                position: relative;
+                border-radius: 5px;
+                margin-top: 5px;
+            }
+        }
+    </style>
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand position-absolute top-0 start-0 p-3" href="{% url 'inicio' %}">
+                <img src="{% static 'img/docusmart_img.png' %}" alt="DocuSmart Logo" width="45" style="border-radius:50%;">
+            </a>
+
+            <!-- Menú de usuario autenticado -->
+            {% if user.is_authenticated %}
+            <div class="profile-container position-absolute top-0 end-0 p-3">
+                <img src="{% static 'img/default_profile.png' %}" alt="Perfil" class="profile-icon">
+                <div class="dropdown-menu">
+                    <a href="{% url 'abrir_perfil' %}" class="dropdown-item">
+                        <i class="bi bi-person icon"></i> Mi Cuenta
+                    </a>
+                    <a href="{% url 'lista_documentos' %}" class="dropdown-item">
+                        <i class="bi bi-folder2 icon"></i> Mis Documentos
+                    </a>
+                    <a href="{% url 'subir_documento' %}" class="dropdown-item">
+                        <i class="bi bi-cloud-upload icon"></i> Subir Documento
+                    </a>
+                    <a href="{% url 'logout' %}" class="dropdown-item text-danger">
+                        <i class="bi bi-door-open icon"></i> Cerrar Sesión
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <!-- Menú para usuarios no autenticados -->
+            <div class="profile-container position-absolute top-0 end-0 p-3">
+                <img src="{% static 'img/default_profile.png' %}" alt="Perfil" class="profile-icon">
+                <div class="dropdown-menu">
+                    <a href="{% url 'login' %}" class="dropdown-item">
+                        <i class="bi bi-key icon"></i> Iniciar Sesión
+                    </a>
+                    <a href="{% url 'registro' %}" class="dropdown-item">
+                        <i class="bi bi-person-plus icon"></i> Registrarse
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="content container mt-4">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

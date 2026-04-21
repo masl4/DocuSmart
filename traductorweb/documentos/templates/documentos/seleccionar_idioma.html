@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block title %}Seleccionar Idioma{% endblock %}
+
+{% block content %}
+<div class="card shadow p-4">
+    <h2 class="text-center">🌐 Seleccionar Idioma para Traducción</h2>
+    
+    <form method="POST" action="{% url 'traducir_documento' documento_id %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="idioma_destino" class="form-label">Seleccione el idioma destino:</label>
+            <select name="idioma_destino" id="idioma_destino" class="form-select">
+                <option value="af">Afrikáans</option>
+                <option value="sq">Albanés</option>
+                <option value="am">Amárico</option>
+                <option value="ar">Árabe</option>
+                <option value="hy">Armenio</option>
+                <option value="as">Asamés</option>
+                <option value="az">Azerbaiyano (latino)</option>
+                <option value="bn">Bengalí</option>
+                <option value="ba">Bashkir</option>
+                <option value="eu">Vasco</option>
+                <option value="bho">Bhojpuri</option>
+                <option value="brx">Bodo</option>
+                <option value="bs">Bosnio (latino)</option>
+                <option value="bg">Búlgaro</option>
+                <option value="yue">Cantonés (tradicional)</option>
+                <option value="ca">Catalán</option>
+                <option value="lzh">Chino (clásico)</option>
+                <option value="zh-Hans">Chino simplificado</option>
+                <option value="zh-Hant">Chino tradicional</option>
+                <option value="sn">chiShona</option>
+                <option value="hr">Croata</option>
+                <option value="cs">Checo</option>
+                <option value="da">Danés</option>
+                <option value="prs">Dari</option>
+                <option value="dv">Divehi</option>
+                <option value="doi">Dogri</option>
+                <option value="nl">Neerlandés</option>
+                <option value="en">Inglés</option>
+                <option value="et">Estonio</option>
+                <option value="fo">Feroés</option>
+                <option value="fj">Fiyiano</option>
+                <option value="fil">Filipino</option>
+                <option value="fi">Finés</option>
+                <option value="fr">Francés</option>
+                <option value="fr-ca">Francés (Canadá)</option>
+                <option value="gl">Gallego</option>
+                <option value="ka">Georgiano</option>
+                <option value="de">Alemán</option>
+                <option value="el">Griego</option>
+                <option value="gu">Gujarati</option>
+                <option value="ht">Criollo haitiano</option>
+                <option value="ha">Hausa</option>
+                <option value="he">Hebreo</option>
+                <option value="hi">Hindi</option>
+                <option value="mww">Hmong Daw (Latín)</option>
+                <option value="hu">Húngaro</option>
+                <option value="is">Islandés</option>
+                <option value="ig">Igbo</option>
+                <option value="id">Indonesio</option>
+                <option value="ikt">Inuinnaqtun</option>
+                <option value="iu">Inuktitut</option>
+                <option value="iu-Latn">Inuktitut (latino)</option>
+                <option value="ga">Irlandés</option>
+                <option value="it">Italiano</option>
+                <option value="ja">Japonés</option>
+                <option value="kn">Canarés</option>
+                <option value="ks">Kashmiri</option>
+                <option value="kk">Kazajo</option>
+                <option value="km">Jemer</option>
+                <option value="rw">Kinyarwanda</option>
+                <option value="tlh-Latn">Klingon</option>
+                <option value="tlh-Piqd">Klingon (plqaD)</option>
+                <option value="gom">Konkani</option>
+                <option value="ko">Coreano</option>
+                <option value="ku">Kurdo (central)</option>
+                <option value="kmr">Kurdo (norte)</option>
+                <option value="ky">Kirguís (cirílico)</option>
+                <option value="lo">Lao</option>
+                <option value="lv">Letón</option>
+                <option value="lt">Lituano</option>
+                <option value="ln">Lingala</option>
+                <option value="dsb">Bajo sorbio</option>
+                <option value="lug">Luganda</option>
+                <option value="mk">Macedonio</option>
+                <option value="mai">Maithili</option>
+                <option value="mg">Malgache</option>
+                <option value="ms">Malayo (latino)</option>
+                <option value="ml">Malayalam</option>
+                <option value="mt">Maltés</option>
+                <option value="mi">Maori</option>
+                <option value="mr">Maratí</option>
+                <option value="mn-Cyrl">Mongol (cirílico)</option>
+                <option value="mn-Mong">Mongol (tradicional)</option>
+                <option value="my">Myanmar</option>
+                <option value="ne">Nepalí</option>
+                <option value="nb">Noruego bokmal</option>
+                <option value="nya">Nyanja</option>
+                <option value="or">Odia</option>
+                <option value="ps">Pastún</option>
+                <option value="fa">Persa</option>
+                <option value="pl">Polaco</option>
+                <option value="pt">Portugués (Brasil)</option>
+                <option value="pt-pt">Portugués (Portugal)</option>
+                <option value="pa">Punjabi</option>
+                <option value="otq">Otomí Querétaro</option>
+                <option value="ro">Rumano</option>
+                <option value="run">Rundi</option>
+                <option value="ru">Ruso</option>
+                <option value="sm">Samoano (latino)</option>
+                <option value="sr-Cyrl">Serbio (cirílico)</option>
+                <option value="sr-Latn">Serbio (latino)</option>
+                <option value="st">Sesotho</option>
+                <option value="nso">Sotho septentrional</option>
+                <option value="tn">Setsuana</option>
+                <option value="sd">Sindhi</option>
+                <option value="si">Cingalés</option>
+                <option value="sk">Eslovaco</option>
+                <option value="sl">Esloveno</option>
+                <option value="so">Somalí (árabe)</option>
+                <option value="es">Español</option>
+                <option value="sw">Swahili (Latín)</option>
+                <option value="sv">Sueco</option>
+                <option value="ty">Tahitiano</option>
+                <option value="ta">Tamil</option>
+                <option value="tt">Tártaro (Latín)</option>
+                <option value="te">Telugu</option>
+                <option value="th">Tailandés</option>
+                <option value="bo">Tibetano</option>
+                <option value="ti">Tigriña</option>
+                <option value="to">Tongano</option>
+                <option value="tr">Turco</option>
+                <option value="tk">Turcomano (latino)</option>
+                <option value="uk">Ucraniano</option>
+                <option value="hsb">Alto sorbio</option>
+                <option value="ur">Urdu</option>
+                <option value="ug">Uigur (árabe)</option>
+                <option value="uz">Uzbeko (latino)</option>
+                <option value="vi">Vietnamita</option>
+                <option value="cy">Galés</option>
+                <option value="xh">Xhosa</option>
+                <option value="yo">Yoruba</option>
+                <option value="yua">Maya Yucateco</option>
+                <option value="zu">Zulú</option>    
+            </select>
+        </div>
+        
+        <button type="submit" class="btn btn-success w-100">🌐 Traducir Documento</button>
+    </form>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'lista_documentos' %}" class="btn btn-secondary">🔙 Volver a Mis Documentos</a>
+    </div>
+</div>
+{% endblock %}
